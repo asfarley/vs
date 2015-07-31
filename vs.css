@@ -1,0 +1,35 @@
+h1 {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 210%;
+	color: #000000;
+	letter-spacing: 10px;
+	line-height: 0.8em;
+	font-weight: bold;
+	font-style: normal;
+	text-transform: uppercase;
+}
+
+#myCanvas {
+	border:1px solid #000000;
+}
+
+div.centre {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+div.layout {
+	text-align: center;
+}
+
+#winner {
+	font-family: Impact, Charcoal, sans-serif;
+	font-size: 220%;
+	color: #3b3b3b;
+	letter-spacing: 3px;
+	line-height: 1.2em;
+	font-weight: normal;
+	font-style: normal;
+	text-transform: none;
+}
