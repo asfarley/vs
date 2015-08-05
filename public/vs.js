@@ -36,7 +36,9 @@ var projectiles2 = [];
 
 setInterval(onTimerTick, 33); 
 
-setInterval(sendState, 200); 
+setInterval(sendState, 100); 
+
+var gameOver = false;
 
 function onTimerTick() {	
 	kd.tick();
@@ -46,6 +48,8 @@ function onTimerTick() {
 }
 
 function sendState() {	
+if(gameOver==false)
+{
 	var p1checkbox = document.getElementById("P1");	
 	var p2checkbox = document.getElementById("P2");
 	var isp1 = p1checkbox.checked;
@@ -102,10 +106,13 @@ else
 	xmlhttp.open("GET","state",true);
 	xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 	xmlhttp.send();
+}
 }	
 }
 
 function recieveState() {
+if(gameOver==false)
+{
 //	console.log(this.responseText);
 	var recieved_state = JSON.parse(this.responseText);
 
@@ -116,8 +123,8 @@ function recieveState() {
 	
 	if(isp1a==false)
 	{
-	p1_x = (p1_x + Number(recieved_state.x1))/2;
-	p1_y = (p1_y + Number(recieved_state.y1))/2;
+	p1_x = (3*p1_x + Number(recieved_state.x1))/4;
+	p1_y = (3*p1_y + Number(recieved_state.y1))/4;
 	p1_vx = Number(recieved_state.vx1);
 	p1_vy = Number(recieved_state.vy1);
 	if (recieved_state.pj10x != undefined)	
@@ -144,8 +151,8 @@ function recieveState() {
 
 	if(isp2a==false)
 	{
-	p2_x = (p2_x + Number(recieved_state.x2))/2;
-	p2_y = (p2_y + Number(recieved_state.y2))/2;
+	p2_x = (3*p2_x + Number(recieved_state.x2))/4;
+	p2_y = (3*p2_y + Number(recieved_state.y2))/4;
 	p2_vx = Number(recieved_state.vx2);
 	p2_vy = Number(recieved_state.vy2);
 	if (recieved_state.pj21x != undefined)	
@@ -173,6 +180,7 @@ function recieveState() {
 	p1_health = Number(recieved_state.h1);
 	p2_health = Number(recieved_state.h2);
 }
+}
 
 function drawWorld() {
 	clearCanvas();
@@ -182,33 +190,37 @@ function drawWorld() {
 
 function detectWin()
 {
+if(gameOver==false)
+{
 	var winnerDiv = document.getElementById("winner");
 	var winnerString = "";
 	if(p1_health <= 0)
 	{
+		sendState();
+		gameOver = true;
 		winnerString = "P2 WINS!";	
-		setTimeout(resetOnWin, 2000);
-		xmlhttp = new XMLHttpRequest();
-		xmlhttp.open("GET","reset",true);
-		xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-		xmlhttp.send();
 	}
 	else if(p2_health <= 0)
 	{
+		sendState();
+		gameOver = true;
 		winnerString = "P1 WINS!";
-		setTimeout(resetOnWin, 2000);
-		xmlhttp = new XMLHttpRequest();
-		xmlhttp.open("GET","reset",true);
-		xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-		xmlhttp.send();
 	}
-	
 	winnerDiv.innerHTML = winnerString;
+}
 }
 
 function resetOnWin()
 {
-	location.reload();
+//	window.location.reload(true);
+	gameOver = false;
+	p1_health = 10;
+	p2_health = 10;
+	xmlhttp = new XMLHttpRequest();
+		xmlhttp.open("GET","reset",true);
+		xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+		xmlhttp.send();
+
 }
 
 function clearCanvas() {

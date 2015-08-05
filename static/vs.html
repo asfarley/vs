@@ -15,10 +15,15 @@ P1:<span id="p1health"></span> &nbsp; &nbsp; P2:<span id="p2health"></span>
 </span><br/>
 <canvas id="myCanvas" width="640" height="480" >
 </canvas>
-P1:<input type="checkbox" id="P1" />
-P2:<input type="checkbox" id="P2" />
+P1:<input type="checkbox" id="P1" onClick="this.blur()" />
+P2:<input type="checkbox" id="P2" onClick="this.blur()" />
+<div id="instructions">
+Controls: &#8593; &#8595; &#8592; &#8594; </br>
+SPACE to fire</div>
 </div>
-
+<div id="reset">
+<button type="button" onClick="resetOnWin()">New Game</button>
+</div>
 <div id="winner"></div>
 </div>
 
