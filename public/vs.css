@@ -1,3 +1,8 @@
+body {
+	font-variant:small-caps;
+	font-family:sans-serif;
+}
+
 h1 {
 	font-family: Verdana, Geneva, sans-serif;
 	font-size: 210%;
@@ -7,6 +12,29 @@ h1 {
 	font-weight: bold;
 	font-style: normal;
 	text-transform: uppercase;
+}
+
+button {
+  -webkit-border-radius: 12;
+  -moz-border-radius: 12;
+  border-radius: 12px;
+  color: #000000;
+  font-size: 19px;
+  background: #ffffff;
+  padding: 10px 20px 10px 20px;
+  border: solid #000000 1px;
+  text-decoration: none;
+  font-variant: small-caps;
+}
+
+button:hover {
+  background: #3cb0fd;
+  background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+  text-decoration: none;
 }
 
 #myCanvas {

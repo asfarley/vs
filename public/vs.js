@@ -34,6 +34,9 @@ var FRICTION_CONST = 0.99;
 var projectiles1 = [];
 var projectiles2 = [];
 
+var background = new Image();
+background.src = "http://198.143.136.212/background.png";
+
 setInterval(onTimerTick, 33); 
 
 setInterval(sendState, 100); 
@@ -78,7 +81,8 @@ if(gameOver==false)
 	var postParams = "x1=" + p1_x + "&y1=" + p1_y + "&vx1=" + p1_vx + "&vy1=" + p1_vy + "&h2=" + p2_health + "&" + projectilesString;
 	xmlhttp.send(postParams);
 }
-else if(isp2)
+
+if(isp2)
 {
 	for(i=0; i < projectiles2.length; i++)
 	{
@@ -99,7 +103,8 @@ else if(isp2)
 	var postParams = "x2=" + p2_x + "&y2=" + p2_y + "&vx2=" + p2_vx + "&vy2=" + p2_vy + "&h1=" + p1_health + "&" + projectilesString;
 	xmlhttp.send(postParams);
 }
-else
+
+if(!isp1 && !isp2)
 {
 	xmlhttp = new XMLHttpRequest();
 	xmlhttp.addEventListener('load', recieveState);
@@ -147,6 +152,8 @@ if(gameOver==false)
 	projectiles1[8] = { x: Number(recieved_state.pj18x), y: Number(recieved_state.pj18y), vx: Number(recieved_state.pj18vx), vy: Number(recieved_state.pj18vy) };
 	if (recieved_state.pj19x != undefined)	
 	projectiles1[9] = { x: Number(recieved_state.pj19x), y: Number(recieved_state.pj19y), vx: Number(recieved_state.pj19vx), vy: Number(recieved_state.pj19vy) };
+
+		p2_health = Number(recieved_state.h2);
 	}
 
 	if(isp2a==false)
@@ -175,15 +182,15 @@ if(gameOver==false)
 	projectiles2[8] = { x: Number(recieved_state.pj28x), y: Number(recieved_state.pj28y), vx: Number(recieved_state.pj28vx), vy: Number(recieved_state.pj28vy) };
 	if (recieved_state.pj29x != undefined)	
 	projectiles2[9] = { x: Number(recieved_state.pj29x), y: Number(recieved_state.pj29y), vx: Number(recieved_state.pj29vx), vy: Number(recieved_state.pj29vy) };
+
+		p1_health = Number(recieved_state.h1);
 	}
-	
-	p1_health = Number(recieved_state.h1);
-	p2_health = Number(recieved_state.h2);
 }
 }
 
 function drawWorld() {
 	clearCanvas();
+	drawBackground();
 	drawSprites();
 	drawHealth();
 }
@@ -240,11 +247,21 @@ function drawPlayers() {
 	ctx.beginPath();
 	ctx.arc(p1_x,p1_y,10,0,2*Math.PI);
 	ctx.closePath();
+	ctx.fillStyle="white";
+	ctx.fill();
 	ctx.stroke();
 	ctx.beginPath();
 	ctx.arc(p2_x,p2_y,10,0,2*Math.PI);
 	ctx.closePath();
+	ctx.fillStyle="white";
+	ctx.fill();
 	ctx.stroke();
+}
+
+function drawBackground() {
+	var x = document.getElementById("myCanvas");
+	var ctx = x.getContext("2d");
+	ctx.drawImage(background,0,0);
 }
 
 function drawHealth() {
@@ -341,6 +358,27 @@ function getInputs()
 		if(isp2)
 		p2_vx += 1;	
 	});
+
+	if(p1_vx > 50)
+		p1_vx = 50;
+	if(p1_vx < -50)
+		p1_vx = -50;
+
+	if(p1_vy > 50)
+		p1_vy = 50;
+	if(p1_vy < -50)
+		p1_vy = -50;
+
+	if(p2_vx > 50)
+		p2_vx = 50;
+	if(p2_vx < -50)
+		p2_vx = -50;
+
+	if(p2_vy > 50)
+		p2_vy = 50;
+	if(p2_vy < -50)
+		p2_vy = -50;
+
 	
 	kd.SPACE.down(function () {
 		if(isp1)
@@ -469,7 +507,7 @@ function detectCollisions()
 	for (var i = 0; i < arrayLength; i++) {
 		
 		var outsideBounds = projectiles1[i].x < 0 || projectiles1[i].x > WIDTH || projectiles1[i].y < 0 || projectiles1[i].y > HEIGHT;
-		var hitP2 = Math.pow(projectiles1[i].x-p2_x,2) + Math.pow(projectiles1[i].y-p2_y,2) < 100;
+		var hitP2 = Math.pow(projectiles1[i].x-p2_x-5,2) + Math.pow(projectiles1[i].y-p2_y-5,2) < 100;
 		
 		if(outsideBounds || hitP2)
 		{
@@ -477,7 +515,7 @@ function detectCollisions()
 			arrayLength--;
 		}
 		
-		if(hitP2)
+		if(hitP2 && p2_health > 0)
 			p2_health--;
 	}
 
@@ -485,7 +523,7 @@ function detectCollisions()
 	for (var i = 0; i < arrayLength; i++) {
 		
 		var outsideBounds = projectiles2[i].x < 0 || projectiles2[i].x > WIDTH || projectiles2[i].y < 0 || projectiles2[i].y > HEIGHT;
-		var hitP1 = Math.pow(projectiles2[i].x-p1_x,2) + Math.pow(projectiles2[i].y-p1_y,2) < 100;
+		var hitP1 = Math.pow(projectiles2[i].x-p1_x-5,2) + Math.pow(projectiles2[i].y-p1_y-5,2) < 100;
 		
 		if(outsideBounds || hitP1)
 		{
@@ -493,7 +531,7 @@ function detectCollisions()
 			arrayLength--;
 		}
 		
-		if(hitP1)
+		if(hitP1 && p1_health > 0)
 			p1_health--;
 	}
 	
